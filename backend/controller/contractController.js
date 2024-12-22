@@ -27,6 +27,7 @@ const createContract = asyncHandler(async (req, res) => {
 
   const contract = await Contract.create({
     user_id: req.user.id,
+    state: "pending",
     title,
     crop_type,
     location,
@@ -60,7 +61,9 @@ const getContract = asyncHandler(async (req, res) => {
 //@route PUT api/contracts/:id
 //@access private
 const updateContract = asyncHandler(async (req, res) => {
-  const contract = await Contract.findByIdAndUpdate(req.params.id,req.body,{new:true});
+  const contract = await Contract.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
   if (!contract) {
     res.status(404);
     throw new Error("Failed to update contract");

@@ -7,6 +7,10 @@ const contractSchema = mongoose.Schema(
       required: true,
       ref: "user",
     },
+    state: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: [true, "please enter the title"],
@@ -63,4 +67,4 @@ const contractSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("contract",contractSchema);
+module.exports = mongoose.model("contract", contractSchema);
