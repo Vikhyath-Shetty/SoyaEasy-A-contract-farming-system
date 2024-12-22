@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Monitoring - AgriContract</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+
+        body {
+            background-color: #f5f6fa;
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 1rem 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .data-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .data-card h3 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .data-card i {
+            color: var(--primary-color);
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-label {
+            color: #666;
+        }
+
+        .data-value {
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        #map {
+            height: 300px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Agricultural Monitoring</h1>
+    </nav>
+
+    <div class="container">
+        <div class="search-section">
+            <form id="locationForm" class="search-form">
+                <div class="input-group">
+                    <input type="text" id="latitude" placeholder="Latitude (e.g., 28.6139)" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="longitude" placeholder="Longitude (e.g., 77.2090)" required>
+                </div>
+                <button type="submit" class="btn">Get Agricultural Data</button>
+            </form>
+            <div id="error" class="error-message"></div>
+        </div>
+
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading agricultural data...</p>
+        </div>
+
+        <div class="data-grid">
+            <div class="data-card">
+                <h3><i class="fas fa-cloud-sun"></i> Weather Conditions</h3>
+                <div id="weatherData">
+                    <!-- Weather data will be inserted here -->
+                </div>
+            </div>
+
+            <div class="data-card">
+                <h3><i class="fas fa-seedling"></i> Soil Data</h3>
+                <div id="soilData">
+                    <!-- Soil data will be inserted here -->
+                </div>
+            </div>
+
+            <div class="data-card">
+                <h3><i class="fas fa-leaf"></i> Vegetation Indices</h3>
+                <div id="vegetationData">
+                    <!-- Vegetation data will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Replace with your API key from agromonitoring.com
+        const API_KEY = 'YOUR_API_KEY';
+
+        document.getElementById('locationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            
+            showLoading(true);
+            clearError();
+            
+            try {
+                // Fetch weather data
+                const weatherResponse = await fetch(`http://api.agromonitoring.com/agro/1.0/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`);
+                const weatherData = await weatherResponse.json();
+                
+                // Fetch soil data
+                const soilResponse = await fetch(`http://api.agromonitoring.com/agro/1.0/soil?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`);
+                const soilData = await soilResponse.json();
+                
+                // Update UI with weather data
+                document.getElementById('weatherData').innerHTML = `
+                    <div class="data-item">
+                        <span class="data-label">Temperature</span>
+                        <span class="data-value">${(weatherData.main.temp - 273.15).toFixed(1)}°C</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Humidity</span>
+                        <span class="data-value">${weatherData.main.humidity}%</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Wind Speed</span>
+                        <span class="data-value">${weatherData.wind.speed} m/s</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Description</span>
+                        <span class="data-value">${weatherData.weather[0].description}</span>
+                    </div>
+                `;
+
+                // Update UI with soil data
+                document.getElementById('soilData').innerHTML = `
+                    <div class="data-item">
+                        <span class="data-label">Soil Temperature</span>
+                        <span class="data-value">${(soilData.t0 - 273.15).toFixed(1)}°C</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Soil Moisture</span>
+                        <span class="data-value">${(soilData.moisture * 100).toFixed(1)}%</span>
+                    </div>
+                `;
+
+                // Example vegetation data (you would need to implement the actual API call)
+                document.getElementById('vegetationData').innerHTML = `
+                    <div class="data-item">
+                        <span class="data-label">NDVI Index</span>
+                        <span class="data-value">0.75</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Leaf Area Index</span>
+                        <span class="data-value">3.2</span>
+                    </div>
+                `;
+
+            } catch (error) {
+                showError('Error fetching agricultural data. Please check your coordinates and try again.');
+                console.error('Error:', error);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function clearError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Example coordinates for testing
+        document.getElementById('latitude').value = '28.6139';
+        document.getElementById('longitude').value = '77.2090';
+    </script>
+</body>
+</html>

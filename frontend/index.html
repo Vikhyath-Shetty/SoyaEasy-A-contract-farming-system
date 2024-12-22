@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriContract - Contract Farming Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: white;
+            padding: 1rem 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 4rem;
+            padding: 4rem 5%;
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Contract Cards Section */
+        .contracts-section {
+            padding: 4rem 5%;
+            background-color: var(--light-color);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contracts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .contract-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .contract-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contract-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .contract-type {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .contract-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #e3fcef;
+            color: #00a843;
+        }
+
+        .status-pending {
+            background-color: #fff3e0;
+            color: #ff9800;
+        }
+
+        .contract-details {
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            color: #666;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .contract-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 5%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: var(--light-color);
+            text-decoration: none;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .contracts-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">AgriContract</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#weather">Weather Forecast</a>
+                <a href="#about">About</a>
+            </div>
+            <div class="auth-buttons">
+                <button class="btn btn-outline">Login</button>
+                <button class="btn btn-primary">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Find the Perfect Farming Contract</h1>
+        <p>Browse through available contracts or list your requirements for contract farming.</p>
+        <button class="btn btn-primary">Explore Contracts</button>
+    </section>
+
+    <section class="contracts-section">
+        <div class="section-title">
+            <h2>Available Contracts</h2>
+        </div>
+        <div class="contracts-grid">
+            <!-- Contract Card 1 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <span class="contract-type">Wheat Farming</span>
+                    <span class="contract-status status-active">Active</span>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">Punjab Region</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">6 months</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Area Required:</span>
+                        <span class="detail-value">50 acres</span>
+                    </div>
+                </div>
+                <div class="contract-footer">
+                    <span class="price">₹45,000/acre</span>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+
+            <!-- Contract Card 2 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <span class="contract-type">Cotton Farming</span>
+                    <span class="contract-status status-pending">Pending</span>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">Gujarat Region</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">8 months</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Area Required:</span>
+                        <span class="detail-value">75 acres</span>
+                    </div>
+                </div>
+                <div class="contract-footer">
+                    <span class="price">₹52,000/acre</span>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+
+            <!-- Contract Card 3 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <span class="contract-type">Rice Farming</span>
+                    <span class="contract-status status-active">Active</span>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">West Bengal</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">4 months</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Area Required:</span>
+                        <span class="detail-value">30 acres</span>
+                    </div>
+                </div>
+                <div class="contract-footer">
+                    <span class="price">₹38,000/acre</span>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+
+            <!-- Contract Card 4 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <span class="contract-type">Sugarcane Farming</span>
+                    <span class="contract-status status-active">Active</span>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">Maharashtra</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">12 months</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Area Required:</span>
+                        <span class="detail-value">100 acres</span>
+                    </div>
+                </div>
+                <div class="contract-footer">
+                    <span class="price">₹65,000/acre</span>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+
+            <!-- Contract Card 5 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <span class="contract-type">Soybean Farming</span>
+                    <span class="contract-status status-pending">Pending</span>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">Madhya Pradesh</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">5 months</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Area Required:</span>
+                        <span class="detail-value">45 acres</span>
+                    </div>
+                </div>
+                <div class="contract-footer">
+                    <span class="price">₹42,000/acre</span>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+
+            <!-- Contract Card 6 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <span class="contract-type">Potato Farming</span>
+                    <span class="contract-status status-active">Active</span>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">Uttar Pradesh</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">4 months</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Area Required:</span>
+                        <span class="detail-value">25 acres</span>
+                    </div>
+                </div>
+                <div class="contract-footer">
+                    <span class="price">₹35,000/acre</span>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AgriContract</h3>
+                <p>Empowering farmers and businesses through transparent contract farming solutions.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li
