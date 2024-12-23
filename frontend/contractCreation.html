@@ -233,7 +233,7 @@
                         <label>Requirements</label>
                         <div class="requirements-list" id="requirementsList">
                             <div class="requirement-item">
-                                <input type="text" placeholder="Add requirement">
+                                <input type="text" class="req" placeholder="Add requirement">
                                 <button type="button" class="btn btn-secondary" onclick="addRequirement()">+</button>
                             </div>
                         </div>
@@ -268,28 +268,6 @@
         </div>
     </div>
 
-    <!-- <script>
-        function addRequirement() {
-            const requirementsList = document.getElementById('requirementsList');
-            const newRequirement = document.createElement('div');
-            newRequirement.className = 'requirement-item';
-            newRequirement.innerHTML = `
-                <input type="text" placeholder="Add requirement">
-                <button type="button" class="btn btn-secondary" onclick="addRequirement()">+</button>
-            `;
-            requirementsList.appendChild(newRequirement);
-        }
-
-        function resetForm() {
-            document.getElementById('createContractForm').reset();
-        }
-
-        document.getElementById('createContractForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Contract created successfully!');
-            this.reset();
-        });
-    </script> -->
     <script src="./scripts/contractCreation.js"></script>
 </body>
 </html>
