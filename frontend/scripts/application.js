@@ -2,9 +2,9 @@ const username = document.getElementById("name");
 const land = document.getElementById("land-size");
 const experience = document.getElementById("experience");
 const information = document.getElementById("message");
-let url = "";
+let contract_Url = "";
+let application_Url = "";
 const accessToken = JSON.parse(localStorage.getItem("accessToken"));
-
 
 
 function getId(){
@@ -14,15 +14,19 @@ function getId(){
 }
 
 
-function buildUrl(){
-  url = `http://localhost:5000/api/contracts/${getId()}`;
+function buildContractUrl(){
+  contract_Url = `http://localhost:5000/api/contracts/${getId()}`;
+}
+
+function buildApplicationUrl(){
+  application_Url = `http://localhost:5000/api/applications/${getId()}`;
 }
 
 
 async function getContract() {
-  buildUrl();
+  buildContractUrl();
   try {
-    const response = await fetch(url, {
+    const response = await fetch(contract_Url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +117,46 @@ function renderContract(contract){
 }
 
 
+
+
 getContract();
+
+async function createApplication(e){
+  e.preventDefault();
+  buildApplicationUrl();
+  try{
+    const response = await fetch(application_Url,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${accessToken}`,
+      },
+      body:JSON.stringify({
+        username:username.value,
+        land:land.value,
+        experience:experience.value,
+        information:information.value,
+      })
+    })
+
+    if(response.ok){
+      const application = await response.json();
+      document.getElementById('contractApplication').reset();
+      console.log("Application was successfull");
+      console.log(application);
+      // window.location.href = "index.html";
+    }
+  }catch(error){
+    alert("application was rejected");
+    console.error(error);
+  }
+
+}
+
+document.getElementById('contractApplication').addEventListener('submit', (e) => {
+  createApplication(e);
+});
+
 
 
 
