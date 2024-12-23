@@ -2,6 +2,7 @@ const loginButton = document.querySelector(".btn-outline");
 const signUpButton = document.querySelector(".btn-primary");
 let isLoggedIn;
 let contracts = [];
+let buttonElements = [];
 
 const url = "http://localhost:5000/api/contracts";
 
@@ -42,7 +43,7 @@ async function getContracts() {
     if (response.ok) {
       contracts = await response.json();
       renderContracts();
-      console.log(contracts);
+      attachEventListeners();
     } else {
       alert("failed to fetch");
     }
@@ -79,11 +80,26 @@ function renderContracts(){
                 </div>
                 <div class="contract-footer">
                     <span class="price">&#x20B9 ${contract.price.toLocaleString()}/acre</span>
-                    <button class="btn btn-primary">View Details</button>
+                    <button class="btn btn-primary contract-button">View Details</button>
                 </div>
             </div>`
   })
-  
 }
+
+//eventListener to view details button
+function attachEventListeners() {
+  buttonElements = document.querySelectorAll(".contract-button");
+  buttonElements.forEach(button => {
+    button.addEventListener("click", event => {
+      const contractCard = event.target.closest(".contract-card");
+      const contractId = contractCard.dataset.id;
+      // console.log(`Contract ID: ${contractId}`);
+      window.location.href = `application.html?id=${contractId}`
+    });
+  });
+}
+
+// const urlParams = new URLSearchParams(window.location.search);
+// const productId = urlParams.get("id");
 
 
