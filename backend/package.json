@@ -1,7 +1,7 @@
 {
-  "name": "mycontacts-backend-api",
+  "name": "soyaeasy-backend",
   "version": "1.0.0",
-  "description": "This is exprress project for my contacts backend api",
+  "description": "This is the backend of soyaeasy contract farming application",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
