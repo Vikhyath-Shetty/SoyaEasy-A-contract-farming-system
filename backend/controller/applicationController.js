@@ -22,3 +22,7 @@ const createApplication = asyncHandler(async (req, res) => {
 });
 
 module.exports = createApplication;
+
+
+//@ get applications
+//GET api/application/
